@@ -6,4 +6,5 @@
   function URLc() {
   document.location.href = 'https://kawwunia.github.io/main.html';
   }
+  redirect();
 </script>
