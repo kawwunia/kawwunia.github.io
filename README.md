@@ -4,6 +4,6 @@
   function redirect () {
          setTimeout(URLc, 5000);
   function URLc() {
-  document.location.href = '[https://www.tutorialspoint.com/index.htm](https://kawwunia.github.io/main.html)';
+  document.location.href = 'https://kawwunia.github.io/main.html';
   }
 </script>
