@@ -19,31 +19,31 @@ var point = [20,15,7];
 
 
 function keyDownHandler(e) {
-  if (e.key === "Right" || e.key === "ArrowRight") {
+  if (e.key === "Right" || e.key === "ArrowRight" || e.keyCode == 68) {
     rightPressed = true;
   }
-  else if (e.key === "Left" || e.key === "ArrowLeft") {
+  else if (e.key === "Left" || e.key === "ArrowLeft" || e.keyCode == 65) {
     leftPressed = true;
   }
-  else if (e.key === "Up" || e.key === "ArrowUp") {
+  else if (e.key === "Up" || e.key === "ArrowUp" || e.keyCode == 87) {
     upPressed = true;
   }
-  else if (e.key === "Down" || e.key === "ArrowDown") {
+  else if (e.key === "Down" || e.key === "ArrowDown" || e.keyCode == 83) {
     downPressed = true;
   }
 }
 
 function keyUpHandler(e) {
-  if (e.key === "Right" || e.key === "ArrowRight") {
+  if (e.key === "Right" || e.key === "ArrowRight" || e.keyCode == 68) {
     rightPressed = false;
   }
-  else if (e.key === "Left" || e.key === "ArrowLeft") {
+  else if (e.key === "Left" || e.key === "ArrowLeft" || e.keyCode == 65) {
     leftPressed = false;
   }
-  else if (e.key === "Up" || e.key === "ArrowUp") {
+  else if (e.key === "Up" || e.key === "ArrowUp" || e.keyCode == 87) {
     upPressed = false;
   }
-  else if (e.key === "Down" || e.key === "ArrowDown") {
+  else if (e.key === "Down" || e.key === "ArrowDown" || e.keyCode == 83) {
     downPressed = false;
   }
 }
