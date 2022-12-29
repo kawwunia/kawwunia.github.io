@@ -12,7 +12,7 @@ var upPressed = false;
 var downPressed = false;
 
 var wynik = 0;
-var timer = 50
+var timer = 50; //def 50
 var czas = timer;
 
 var point = [20,15,7];
@@ -54,6 +54,7 @@ function drawBall() {
     ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
+    console.log("x: " + x + " y: " + y);
 }
 function drawPoint() {
     ctx.beginPath();
@@ -125,7 +126,7 @@ function Movement() {
 }
 
 function CollisionDetect() {
-    if(x > point[0] && x < point[0] + point[2] && y > point[1] && y < point[1] + point[2]) {
+    if((x >= point[0] && x <= point[0] + point[2] && y >= point[1] && y <= point[1] + point[2]) || (x <= point[0] && x >= point[0] - point[2] && y <= point[1] && y >= point[1] - point[2])) {
         wynik += 1;
         czas = timer;
         point[0] = GetRandom(canvas.width - 10);
