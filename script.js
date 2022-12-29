@@ -93,7 +93,11 @@ function drawTime() {
 
 function GameOver() {
 clearInterval(interval);
-alert("di ent");
+if (localStorage.getItem("highscore") < wynik) {
+  localStorage.setItem("highscore", wynik);
+}
+const alertText = "Koniec! \nWynik: " + wynik + "\nNajlepszy wynik: " + localStorage.getItem("highscore");
+alert(alertText);
 location.reload();
 }
 function Movement() {
