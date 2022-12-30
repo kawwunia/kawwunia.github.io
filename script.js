@@ -14,7 +14,7 @@ var text_color = "#000";
 
 //Czas
 var wynik = 0;
-var timer = 50; //def 50
+var timer = 5000000; //def 50
 var czas = timer;
 var czas_powerup = 0;
 var def_roznicaCzasu = 0.1;
@@ -22,6 +22,10 @@ var spow_roznicaCzasu = 0.05;
 
 var point = [20,15,7];
 var powerup = {x:0,y:0,radius:7,color:"blue",type:0,active:false};
+const bttn_left = document.getElementById("b_l");
+const bttn_up = document.getElementById("b_u");
+const bttn_down = document.getElementById("b_d");
+const bttn_right = document.getElementById("b_r");
 
 
 function keyDownHandler(e) {
@@ -140,6 +144,35 @@ function Movement() {
     else if(y - ballRadius > canvas.height) {
         y = canvas.height;
     }
+//przycisk dol
+bttn_down.onpointerdown = function() {
+  downPressed = true;
+}
+bttn_down.onpointerup = function() {
+  downPressed = false;
+}
+//przycisk gora
+bttn_up.onpointerdown = function() {
+  upPressed = true;
+}
+bttn_up.onpointerup = function() {
+  upPressed = false;
+}
+//przycisk lewo
+bttn_left.onpointerdown = function() {
+  leftPressed = true;
+}
+bttn_left.onpointerup = function() {
+  leftPressed = false;
+}
+//przycisk prawo
+bttn_right.onpointerdown = function() {
+  rightPressed = true;
+}
+bttn_right.onpointerup = function() {
+  rightPressed = false;
+}
+
 }
 
 function CollisionDetect() {
