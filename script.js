@@ -2,7 +2,7 @@ var canvas = document.getElementById("canva");
 var ctx = canvas.getContext("2d");
 var x = canvas.width/2;
 var y = canvas.height/2;
-var radius = 10;
+var ballRadius = 10;
 var dx = 2;
 var dy = 2;
 var color = "red";
@@ -10,12 +10,18 @@ var rightPressed = false;
 var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
+var text_color = "#000";
 
+//Czas
 var wynik = 0;
 var timer = 50; //def 50
 var czas = timer;
+var czas_powerup = 0;
+var def_roznicaCzasu = 0.1;
+var spow_roznicaCzasu = 0.05;
 
 var point = [20,15,7];
+var powerup = {x:0,y:0,radius:7,color:"blue",type:0,active:false};
 
 
 function keyDownHandler(e) {
@@ -50,11 +56,10 @@ function keyUpHandler(e) {
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI*2);
+    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
-    console.log("x: " + x + " y: " + y);
 }
 function drawPoint() {
     ctx.beginPath();
@@ -73,6 +78,7 @@ function draw() {
     Movement();
     drawScore();
     drawTime();
+    drawPowerUp();
     CollisionDetect();
 }
 function drawScore() {
@@ -81,10 +87,17 @@ function drawScore() {
   ctx.fillText(`Wynik: ${wynik}`, 8, 20);
 }
 function drawTime() {
-  czas -= 0.1;
-
+  if(czas_powerup <= 0) {
+  czas -= def_roznicaCzasu;
+  text_color = "#000"
+  }
+  else {
+    czas -= spow_roznicaCzasu;
+    text_color = "blue";
+  }
+czas_powerup -= 0.1;
   ctx.font = "16px Arial";
-  ctx.fillStyle = "#000";
+  ctx.fillStyle = text_color;
   ctx.fillText(`Czas: ${(czas/10).toFixed(2)}`, 8, 50);
   if (czas <= 0) {
     GameOver();
@@ -115,27 +128,58 @@ function Movement() {
         y += dy;
     }
     //Walls
-    if(x + radius < 0) {
+    if(x + ballRadius < 0) {
         x = 0;
     }
-    else if(x - radius > canvas.width) {
+    else if(x - ballRadius > canvas.width) {
         x = canvas.width;
     }
-    if(y + radius < 0) {
+    if(y + ballRadius < 0) {
         y = 0;
     }
-    else if(y - radius > canvas.height) {
+    else if(y - ballRadius > canvas.height) {
         y = canvas.height;
     }
 }
 
 function CollisionDetect() {
+  //Collision with point
     if((x >= point[0] && x <= point[0] + point[2] && y >= point[1] && y <= point[1] + point[2]) || (x <= point[0] && x >= point[0] - point[2] && y <= point[1] && y >= point[1] - point[2])) {
         wynik += 1;
         czas = timer;
         point[0] = GetRandom(canvas.width - 10);
         point[1] = GetRandom(canvas.height - 10);
+        if (powerup.active == false) {
+        SpawnPowerUp();
+        }
     }
+  //Collision with PowerUp
+  if(((x >= powerup.x && x <= powerup.x + powerup.radius && y >= powerup.y && y <= powerup.y + powerup.radius) || (x <= powerup.x && x >= powerup.x - powerup.radius && y <= powerup.y && y >= powerup.y - powerup.radius)) && powerup.active == true) {
+powerup.active = false;
+czas_powerup = 50;
+}
+}
+
+function SpawnPowerUp() {
+
+if((Math.round(GetRandom(100)) % 2 == 0)) {
+  powerup.active = true;
+  powerup.x = GetRandom(canvas.width - 10);
+  powerup.y = GetRandom(canvas.height - 10);
+}
+
+}
+
+function drawPowerUp() {
+  ctx.beginPath();
+  if(powerup.active == true) {
+  ctx.arc(powerup.x, powerup.y, powerup.radius, 0, Math.PI*2);
+  ctx.fillStyle = powerup.color;
+  ctx.fill();
+  ctx.strokeStyle = "#000";
+  ctx.stroke();
+}
+  ctx.closePath();
 }
 
 function GetRandom(max) {
