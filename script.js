@@ -14,7 +14,7 @@ var text_color = "#000";
 
 //Czas
 var wynik = 0;
-var timer = 5000000; //def 50
+var timer = 50; //def 50
 var czas = timer;
 var czas_powerup = 0;
 var def_roznicaCzasu = 0.1;
