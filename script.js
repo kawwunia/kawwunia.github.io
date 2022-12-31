@@ -17,7 +17,7 @@ var text_color = "#000";
 
 //Time and score
 var wynik = 0; //score
-var timer = 5000000; //def 50
+var timer = 50; //def 50
 var czas = timer; //set timer
 var czas_powerup = 0; //powerup timer
 var def_roznicaCzasu = 0.1; //default timer update
