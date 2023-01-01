@@ -1,12 +1,6 @@
 var canvas = document.getElementById("canva"); //get canvas as variable
 var ctx = canvas.getContext("2d"); //set canvas
-//Ball should be changed to object later $
-var x = canvas.width/2; //ball's x
-var y = canvas.height/2; //ball's y
-var ballRadius = 10; //ball's radius
-var dx = 2; //Movement speed x
-var dy = 2; //Movement speed y
-var color = "red"; //balls color
+var ball = {x:(canvas.width/2),y:(canvas.height/2),radius:10,dx:2,dy:2,color:"red"};
 //Up
 var rightPressed = false;
 var leftPressed = false;
@@ -17,7 +11,7 @@ var text_color = "#000";
 
 //Time and score
 var wynik = 0; //score
-var timer = 50; //def 50
+var timer = 5000000; //def 50
 var czas = timer; //set timer
 var czas_powerup = 0; //powerup timer
 var def_roznicaCzasu = 0.1; //default timer update
@@ -66,8 +60,8 @@ function keyUpHandler(e) { //Key Handlers (Up)
 
 function drawBall() { //draw Ball
     ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = color; //set ball's color
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+    ctx.fillStyle = ball.color; //set ball's color
     ctx.fill();
     ctx.closePath();
 }
@@ -98,13 +92,14 @@ function drawScore() { //draw Score as text
 }
 function drawTime() { //draw Timer (black = no active effects, blue = time is slower)
   //Powerup affects on time
-  if(czas_powerup <= 0 && activePowerup == 0) { //add activePowerup $
-  czas -= def_roznicaCzasu; //timer update if powerup is not active
-  text_color = "#000" //change color to default (black)
+  if(czas_powerup > 0 && activePowerup == 0 && powerup.type == 0) {
+
+  czas -= spow_roznicaCzasu; //timer update if powerup is active
+  text_color = "blue"; //change text color to blue if powerup is not active
   }
   else {
-    czas -= spow_roznicaCzasu; //timer update if powerup is active
-    text_color = "blue"; //change text color to blue if powerup is not active
+    czas -= def_roznicaCzasu; //timer update if powerup is not active
+    text_color = "#000" //change color to default (black)
   }
 czas_powerup -= 0.1; //Update powerup time
   ctx.font = "16px Arial"; //set font and size
@@ -127,29 +122,29 @@ location.reload(); //reload the page
 function Movement() {
     //Movement
     if(rightPressed) {
-        x += dx;
+        ball.x += ball.dx;
     }
     if(leftPressed) {
-        x -= dx;
+        ball.x -= ball.dx;
     }
     if(upPressed) {
-        y -= dy;
+        ball.y -= ball.dy;
     }
     if(downPressed) {
-        y += dy;
+        ball.y += ball.dy;
     }
     //Border
-    if(x + ballRadius < 0) {
-        x = 0;
+    if(ball.x + ball.radius < 0) {
+        ball.x = 0;
     }
-    else if(x - ballRadius > canvas.width) {
-        x = canvas.width;
+    else if(ball.x - ball.radius > canvas.width) {
+        ball.x = canvas.width;
     }
-    if(y + ballRadius < 0) {
-        y = 0;
+    if(ball.y + ball.radius < 0) {
+        ball.y = 0;
     }
-    else if(y - ballRadius > canvas.height) {
-        y = canvas.height;
+    else if(ball.y - ball.radius > canvas.height) {
+        ball.y = canvas.height;
     }
 //button go down
 bttn_down.onpointerdown = function() {
@@ -184,7 +179,7 @@ bttn_right.onpointerup = function() {
 
 function CollisionDetect() {
   //Collision with point
-    if((x >= point[0] && x <= point[0] + point[2] && y >= point[1] && y <= point[1] + point[2]) || (x <= point[0] && x >= point[0] - point[2] && y <= point[1] && y >= point[1] - point[2])) {
+    if((ball.x >= point[0] && ball.x <= point[0] + point[2] && ball.y >= point[1] && ball.y <= point[1] + point[2]) || (ball.x <= point[0] && ball.x >= point[0] - point[2] && ball.y <= point[1] && ball.y >= point[1] - point[2])) {
         wynik += 1; //Add point
         czas = timer; //set timer
         point[0] = GetRandom(canvas.width - 10); //set powerup location
@@ -194,7 +189,7 @@ function CollisionDetect() {
         }
     }
   //Collision with PowerUp
-  if(((x >= powerup.x && x <= powerup.x + powerup.radius && y >= powerup.y && y <= powerup.y + powerup.radius) || (x <= powerup.x && x >= powerup.x - powerup.radius && y <= powerup.y && y >= powerup.y - powerup.radius)) && powerup.active == true) {
+  if(((ball.x >= powerup.x && ball.x <= powerup.x + powerup.radius && ball.y >= powerup.y && ball.y <= powerup.y + powerup.radius) || (ball.x <= powerup.x && ball.x >= powerup.x - powerup.radius && ball.y <= powerup.y && ball.y >= powerup.y - powerup.radius)) && powerup.active == true) {
 powerup.active = false;
 czas_powerup = 50; //set powerup timer
 activePowerup = powerup.type; //set powerup type
