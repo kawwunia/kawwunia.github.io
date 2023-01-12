@@ -1,6 +1,6 @@
 var canvas = document.getElementById("canva"); //get canvas as variable
 var ctx = canvas.getContext("2d"); //set canvas
-var ball = {x:(canvas.width/2),y:(canvas.height/2),radius:10,dx:2,dy:2,color:"red"};
+var ball = {x:(canvas.width/2),y:(canvas.height/2),radius:10,dx:3,dy:3,color:"red"};
 //Up
 var rightPressed = false;
 var leftPressed = false;
@@ -26,7 +26,7 @@ const bttn_left = document.getElementById("b_l"); //get html button left
 const bttn_up = document.getElementById("b_u"); //get html button up
 const bttn_down = document.getElementById("b_d"); //get html button down
 const bttn_right = document.getElementById("b_r"); //get html button right
-var soundPoint = new sound("mixkit-arcade-mechanical-bling-210.wav"); //Sound Effect
+var soundPoint = new Audio("mixkit-arcade-mechanical-bling-210.wav"); //Sound Effect
 
 
 function keyDownHandler(e) { //Key Handlers (Down)
@@ -182,6 +182,7 @@ function CollisionDetect() {
   //Collision with point
     if((ball.x >= point[0] && ball.x <= point[0] + point[2] && ball.y >= point[1] && ball.y <= point[1] + point[2]) || (ball.x <= point[0] && ball.x >= point[0] - point[2] && ball.y <= point[1] && ball.y >= point[1] - point[2])) {
         wynik += 1; //Add point
+        soundPoint.currentTime = 0;
         soundPoint.play();
         czas = timer; //set timer
         point[0] = GetRandom(canvas.width - 10); //set powerup location
@@ -230,5 +231,7 @@ document.addEventListener("keydown", keyDownHandler, false);
 
 //intervals and point location rng
 const interval = setInterval(draw, 10);
+ctx.canvas.width  = window.innerWidth;
+ctx.canvas.height = window.innerHeight - 15;
 point[0] = GetRandom(canvas.width - 10);
 point[1] = GetRandom(canvas.height - 10);
