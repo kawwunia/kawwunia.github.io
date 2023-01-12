@@ -26,7 +26,7 @@ const bttn_left = document.getElementById("b_l"); //get html button left
 const bttn_up = document.getElementById("b_u"); //get html button up
 const bttn_down = document.getElementById("b_d"); //get html button down
 const bttn_right = document.getElementById("b_r"); //get html button right
-var soundPoint = new Sound("mixkit-arcade-mechanical-bling-210.wav"); //Sound Effect
+var soundPoint = new sound("mixkit-arcade-mechanical-bling-210.wav"); //Sound Effect
 
 
 function keyDownHandler(e) { //Key Handlers (Down)
