@@ -26,6 +26,7 @@ const bttn_left = document.getElementById("b_l"); //get html button left
 const bttn_up = document.getElementById("b_u"); //get html button up
 const bttn_down = document.getElementById("b_d"); //get html button down
 const bttn_right = document.getElementById("b_r"); //get html button right
+const soundPoint = new Sound("mixkit-arcade-mechanical-bling-210.wav"); //Sound Effect
 
 
 function keyDownHandler(e) { //Key Handlers (Down)
@@ -181,6 +182,7 @@ function CollisionDetect() {
   //Collision with point
     if((ball.x >= point[0] && ball.x <= point[0] + point[2] && ball.y >= point[1] && ball.y <= point[1] + point[2]) || (ball.x <= point[0] && ball.x >= point[0] - point[2] && ball.y <= point[1] && ball.y >= point[1] - point[2])) {
         wynik += 1; //Add point
+        soundPoint.play();
         czas = timer; //set timer
         point[0] = GetRandom(canvas.width - 10); //set powerup location
         point[1] = GetRandom(canvas.height - 10);
