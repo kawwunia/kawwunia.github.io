@@ -231,7 +231,5 @@ document.addEventListener("keydown", keyDownHandler, false);
 
 //intervals and point location rng
 const interval = setInterval(draw, 10);
-ctx.canvas.width  = window.innerWidth;
-ctx.canvas.height = window.innerHeight - 15;
 point[0] = GetRandom(canvas.width - 10);
 point[1] = GetRandom(canvas.height - 10);
