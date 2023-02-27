@@ -12,10 +12,10 @@ var text_color = "#000";
 //Time and score
 var wynik = 0; //score
 var timer = 50; //def 50
-var czas = timer; //set timer
-var czas_powerup = 0; //powerup timer
-var def_roznicaCzasu = 0.1; //default timer update
-var spow_roznicaCzasu = 0.05; //powerup timer update
+var time = timer; //set timer
+var time_powerup = 0; //powerup timer
+var def_timediff = 0.1; //default timer update
+var slowed_timediff = 0.05; //powerup timer update
 
 //powerup
 var activePowerup = 0; //0 = slower time (blue timer), 1 = double the points (orange ball) 
@@ -93,20 +93,20 @@ function drawScore() { //draw Score as text
 }
 function drawTime() { //draw Timer (black = no active effects, blue = time is slower)
   //Powerup affects on time
-  if(czas_powerup > 0 && activePowerup == 0 && powerup.type == 0) {
+  if(time_powerup > 0 && activePowerup == 0 && powerup.type == 0) {
 
-  czas -= spow_roznicaCzasu; //timer update if powerup is active
+  time -= slowed_timediff; //timer update if powerup is active
   text_color = "blue"; //change text color to blue if powerup is not active
   }
   else {
-    czas -= def_roznicaCzasu; //timer update if powerup is not active
+    time -= def_timediff; //timer update if powerup is not active
     text_color = "#000" //change color to default (black)
   }
-czas_powerup -= 0.1; //Update powerup time
+time_powerup -= 0.1; //Update powerup time
   ctx.font = "16px Arial"; //set font and size
   ctx.fillStyle = text_color; //set color
-  ctx.fillText(`Czas: ${(czas/10).toFixed(2)}`, 8, 50); //Set text
-  if (czas <= 0) { //Game over event
+  ctx.fillText(`Czas: ${(time/10).toFixed(2)}`, 8, 50); //Set text
+  if (time <= 0) { //Game over event
     GameOver();
   }
 }
@@ -186,7 +186,7 @@ function CollisionDetect() {
       wynik += 1; //Add point
         soundPoint.currentTime = 0;
         soundPoint.play();
-        czas = timer; //set timer
+        time = timer; //set timer
         point.x = GetRandom(canvas.width - 10); //set powerup location
         point.y = GetRandom(canvas.height - 10);
         point.distance = ( Math.sqrt( ( Math.abs((point.x - ball.x)^2)) + Math.abs((point.y - ball.y)^2)));
@@ -197,7 +197,7 @@ function CollisionDetect() {
   //Collision with PowerUp
   if(powerup.distance < 3.14 && powerup.active == true) {
 powerup.active = false;
-czas_powerup = 50; //set powerup timer
+time_powerup = 50; //set powerup timer
 activePowerup = powerup.type; //set powerup type
 }
 }
