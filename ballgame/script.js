@@ -20,7 +20,7 @@ var spow_roznicaCzasu = 0.05; //powerup timer update
 //powerup
 var activePowerup = 0; //0 = slower time (blue timer), 1 = double the points (orange ball) 
 
-var point = [20,15,7]; //point array
+var point = {x:20,y:15,radius:7,distance:100}; //point array: x,y, radius
 var powerup = {x:0,y:0,radius:7,color:"blue",type:0,active:false}; //powerup object
 const bttn_left = document.getElementById("b_l"); //get html button left
 const bttn_up = document.getElementById("b_u"); //get html button up
@@ -68,7 +68,7 @@ function drawBall() { //draw Ball
 }
 function drawPoint() { //draw Point 
     ctx.beginPath();
-    ctx.arc(point[0], point[1], point[2], 0, Math.PI*2);
+    ctx.arc(point.x, point.y, point.radius, 0, Math.PI*2);
     ctx.fillStyle = "gold";
     ctx.fill();
     ctx.strokeStyle = "#000";
@@ -180,19 +180,22 @@ bttn_right.onpointerup = function() {
 
 function CollisionDetect() {
   //Collision with point
-    if((ball.x >= point[0] && ball.x <= point[0] + point[2] && ball.y >= point[1] && ball.y <= point[1] + point[2]) || (ball.x <= point[0] && ball.x >= point[0] - point[2] && ball.y <= point[1] && ball.y >= point[1] - point[2])) {
-        wynik += 1; //Add point
+  point.distance = ( Math.sqrt( ( Math.abs((point.x - ball.x)^2)) + Math.abs((point.y - ball.y)^2)));
+  powerup.distance = ( Math.sqrt( ( Math.abs((powerup.x - ball.x)^2)) + Math.abs((powerup.y - ball.y)^2)));
+    if(point.distance < 3.14) {
+      wynik += 1; //Add point
         soundPoint.currentTime = 0;
         soundPoint.play();
         czas = timer; //set timer
-        point[0] = GetRandom(canvas.width - 10); //set powerup location
-        point[1] = GetRandom(canvas.height - 10);
+        point.x = GetRandom(canvas.width - 10); //set powerup location
+        point.y = GetRandom(canvas.height - 10);
+        point.distance = ( Math.sqrt( ( Math.abs((point.x - ball.x)^2)) + Math.abs((point.y - ball.y)^2)));
         if (powerup.active == false) {
         SpawnPowerUp();
         }
     }
   //Collision with PowerUp
-  if(((ball.x >= powerup.x && ball.x <= powerup.x + powerup.radius && ball.y >= powerup.y && ball.y <= powerup.y + powerup.radius) || (ball.x <= powerup.x && ball.x >= powerup.x - powerup.radius && ball.y <= powerup.y && ball.y >= powerup.y - powerup.radius)) && powerup.active == true) {
+  if(powerup.distance < 3.14 && powerup.active == true) {
 powerup.active = false;
 czas_powerup = 50; //set powerup timer
 activePowerup = powerup.type; //set powerup type
@@ -231,5 +234,5 @@ document.addEventListener("keydown", keyDownHandler, false);
 
 //intervals and point location rng
 const interval = setInterval(draw, 10);
-point[0] = GetRandom(canvas.width - 10);
-point[1] = GetRandom(canvas.height - 10);
+point.x = GetRandom(canvas.width - 10);
+point.y = GetRandom(canvas.height - 10);
