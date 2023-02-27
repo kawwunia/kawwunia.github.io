@@ -1,6 +1,6 @@
 var canvas = document.getElementById("canva"); //get canvas as variable
 var ctx = canvas.getContext("2d"); //set canvas
-var ball = {x:(canvas.width/2),y:(canvas.height/2),radius:10,dx:3,dy:3,color:"red"};
+var ball = {x:(canvas.width/2),y:(canvas.height/2),radius:10,dx:2,dy:2,color:"red"};
 //Up
 var rightPressed = false;
 var leftPressed = false;
@@ -76,7 +76,7 @@ function drawPoint() { //draw Point
     ctx.closePath();
 }
 
-function draw() { //main Event (refresh time 10)
+function draw() { //main Event (using requestAnimationFrame)
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clear 
     drawBall();
     drawPoint();
@@ -85,6 +85,9 @@ function draw() { //main Event (refresh time 10)
     drawTime();
     drawPowerUp();
     CollisionDetect();
+    if(time > 0) {
+    requestAnimationFrame(draw);
+    }
 }
 function drawScore() { //draw Score as text
   ctx.font = "16px Arial";
@@ -112,7 +115,7 @@ time_powerup -= 0.1; //Update powerup time
 }
 
 function GameOver() {
-clearInterval(interval); //stop the game
+cancelAnimationFrame(animationId); //stop the game
 if (localStorage.getItem("highscore") < wynik) { //update highscore
   localStorage.setItem("highscore", wynik);
 }
@@ -232,7 +235,7 @@ function GetRandom(max) { //rng, not working properly
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 
-//intervals and point location rng
-const interval = setInterval(draw, 10);
+//reqAnimationFrame and point location rng
+const animationId = requestAnimationFrame(draw);
 point.x = GetRandom(canvas.width - 10);
 point.y = GetRandom(canvas.height - 10);
