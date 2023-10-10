@@ -114,7 +114,7 @@
     
     function fetchLoc() {
       locText.style.display = "block";
-      fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + document.getElementById("searchLocation").value + "&limit=1&appid=57d4eaaebaea7b4629f3341017d0ddfa")
+      fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + document.getElementById("searchLocation").value + "&limit=1&appid=57d4eaaebaea7b4629f3341017d0ddfa")
         .then(function (response) {
           if (!response.ok) {
             locText.textContent = "ERROR: Network Response";
@@ -133,7 +133,7 @@
     function setLoc(jsonData) {
         locText.innerText = jsonData[0].name;
         document.title = "WeatherApp | " + jsonData[0].name;
-        console.log(jsonData);
+      
         fetchWeather(jsonData);
     }
     function fetchWeather(jsonData) {
@@ -153,9 +153,7 @@
     }
 
     function setWeather(jsonData) {
-        console.warn(jsonData);
         const weatherIcon = document.getElementById("weatherIcon");
-        console.log(jsonData.weather[0].main);
         weatherIcon.classList.remove("fa-cloud-rain");
         weatherIcon.classList.remove("fa-cloud");
         weatherIcon.classList.remove("fa-sun");
@@ -192,7 +190,6 @@
           weatherIcon.classList.add("fa-question-circle");
         }
         const tempText = document.getElementById("celsius");
-        console.log(jsonData.weather[0].main.temp);
         tempText.innerText = Number.parseInt(jsonData.main.temp-272.15) + " °C";
     }
     </script>
