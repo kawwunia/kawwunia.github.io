@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherApp</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/6e3d5e18f5.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=AR+One+Sans&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        body {
+            background: #08050b;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'AR One Sans', sans-serif;
+            transition: background 15s;
+        }
+
+        .rain {
+            background: linear-gradient(144deg, rgba(74,101,131,1) 0%, rgba(108,128,148,1) 35%, rgba(78,104,129,1) 50%, rgba(78,104,129,1) 65%, rgba(60,83,105,1) 100%);
+        }
+        .clouds {
+            background: linear-gradient(144deg, rgba(63,130,146,1) 0%, rgba(108,156,168,1) 35%, rgba(148,168,177,1) 50%, rgba(199,204,208,1) 65%, rgba(226,226,226,1) 100%);
+        }
+        .clear {
+          background: linear-gradient(45deg, rgba(255, 255, 0, 1) 0%, rgba(255, 165, 0, 1) 30%, rgb(0, 183, 255) 100%);
+        }
+        .snow {
+          background: linear-gradient(45deg, rgba(199,204,208,1) 0%, rgba(226,226,226,1) 30%, rgb(0, 183, 255) 100%);
+        }
+        .thunderstorm {
+          background: linear-gradient(144deg, rgba(14,30,49,1) 0%, rgba(47,69,93,1) 45%, rgba(113,122,125,1) 60%, rgba(119,128,130,1) 62%, rgba(187,187,179,1) 83%, rgba(242,241,236,1) 100%);
+        }
+
+        .main {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(6.5px);
+            -webkit-backdrop-filter: blur(6.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 25%;
+            min-height: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: 1s;
+        }
+        .searchLocation {
+            background: rgba(0, 0, 0, 0.616);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(6.5px);
+            -webkit-backdrop-filter: blur(6.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14pt;
+            width: 100%;
+            margin-top: 5px;
+            transition: 0.5s;
+            font-family: 'AR One Sans', sans-serif;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding: 10px;
+        }
+        .searchLocation::placeholder {
+            color:  rgba(0, 0, 0, 0.404);
+        }
+        .searchLocation:focus {
+            background: rgba(255, 255, 255, 0.3);
+            color: black;
+        }
+        .text-gradient {
+            background-image: linear-gradient(45deg, rgba(255, 255, 0, 1) 0%, rgba(255, 165, 0, 1) 50%, rgba(154, 16, 154, 1) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 32pt;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <input name="searchLocation" class="searchLocation" placeholder="🔍 Where are you?" id="searchLocation">
+        <div>
+            <p style="display: none;"class="text-gradient" id="locText"></p>
+            <div style="text-align: center;">
+            <i id="weatherIcon" class="fa-solid fa-2xl" style="color: #ffffff;"></i>
+            <p id="celsius"></p>
+        </div>
+        </div>
+    </div>
+</body>
+<script>
+    const locText = document.getElementById("locText");
+    document.getElementById("searchLocation").addEventListener('keypress', function (keyPress) {
+      if (keyPress.key === 'Enter') {
+        fetchLoc();
+      }
+    });
+    
+    function fetchLoc() {
+      locText.style.display = "block";
+      fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + document.getElementById("searchLocation").value + "&limit=1&appid=57d4eaaebaea7b4629f3341017d0ddfa")
+        .then(function (response) {
+          if (!response.ok) {
+            locText.textContent = "ERROR: Network Response";
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          setLoc(data);
+        })
+        .catch(function (error) {
+          console.error("ERROR:", error);
+          locText.textContent = "ERROR: Localization";
+        });
+    }
+
+    function setLoc(jsonData) {
+        locText.innerText = jsonData[0].name;
+        document.title = "WeatherApp | " + jsonData[0].name;
+        console.log(jsonData);
+        fetchWeather(jsonData);
+    }
+    function fetchWeather(jsonData) {
+      fetch("https://api.openweathermap.org/data/2.5/weather?lat=" + jsonData[0].lat + "&lon=" + jsonData[0].lon + "&appid=57d4eaaebaea7b4629f3341017d0ddfa")
+        .then(function (response) {
+          if (!response.ok) {
+            console.log("ERROR: Network Response")
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          setWeather(data);
+        })
+        .catch(function (error) {
+          console.error("ERROR:", error);
+        });
+    }
+
+    function setWeather(jsonData) {
+        console.warn(jsonData);
+        const weatherIcon = document.getElementById("weatherIcon");
+        console.log(jsonData.weather[0].main);
+        weatherIcon.classList.remove("fa-cloud-rain");
+        weatherIcon.classList.remove("fa-cloud");
+        weatherIcon.classList.remove("fa-sun");
+        weatherIcon.classList.remove("fa-snowflake");
+        weatherIcon.classList.remove("fa-bolt");
+        weatherIcon.classList.remove("fa-question-circle");
+        document.body.classList.remove("rain");
+        document.body.classList.remove("clouds");
+        document.body.classList.remove("clear");
+        document.body.classList.remove("snow");
+        document.body.classList.remove("thunderstorm");
+        switch(jsonData.weather[0].main) {
+        case "Rain":
+        weatherIcon.classList.add("fa-cloud-rain");
+        document.body.classList.add("rain");
+        break;
+        case "Clouds":
+        weatherIcon.classList.add("fa-cloud");
+        document.body.classList.add("clouds");
+        break;
+        case "Clear":
+          weatherIcon.classList.add("fa-sun");
+          document.body.classList.add("clear");
+        break;
+        case "Snow":
+          weatherIcon.classList.add("fa-snowflake");
+          document.body.classList.add("snow");
+          break;
+        case "Thunderstorm":
+          weatherIcon.classList.add("fa-bolt");
+          document.body.classList.add("thunderstorm");
+          break;
+        default:
+          weatherIcon.classList.add("fa-question-circle");
+        }
+        const tempText = document.getElementById("celsius");
+        console.log(jsonData.weather[0].main.temp);
+        tempText.innerText = Number.parseInt(jsonData.main.temp-272.15) + " °C";
+    }
+    </script>
+    
+</html>
